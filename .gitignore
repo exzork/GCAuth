@@ -4,6 +4,12 @@
 # Log file
 *.log
 
+# Intellij
+.idea
+
+# Output of the build
+out
+
 # BlueJ files
 *.ctxt
 
