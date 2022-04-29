@@ -5,10 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.plugin.Plugin;
-import me.exzork.gcauth.handler.AuthStatusHandler;
-import me.exzork.gcauth.handler.ChangePasswordHandler;
-import me.exzork.gcauth.handler.LoginHandler;
-import me.exzork.gcauth.handler.RegisterHandler;
+import me.exzork.gcauth.handler.*;
 
 import java.io.File;
 import java.io.FileReader;
@@ -39,6 +36,8 @@ public class GCAuth extends Plugin {
         server.createContext("/grasscutter/login", new LoginHandler());
         server.createContext("/grasscutter/register", new RegisterHandler());
         server.createContext("/grasscutter/change_password", new ChangePasswordHandler());
+        server.removeContext("/hk4e_global/mdk/shield/api/login");
+        server.createContext("/hk4e_global/mdk/shield/api/login", new ClientLoginHandler());
     }
 
     @Override

@@ -1,23 +1,18 @@
 package me.exzork.gcauth.utils;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import emu.grasscutter.database.DatabaseHelper;
 import emu.grasscutter.game.Account;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import me.exzork.gcauth.GCAuth;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
-import io.jsonwebtoken.Jwts;
 
-import javax.crypto.SecretKey;
 import java.util.HashMap;
 
 public final class Authentication {
     public static final HashMap<String,String> tokens = new HashMap<String,String>();
-    private static SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    public static SecretKey getKey() {
-        return key;
-    }
+    private static Algorithm key = Algorithm.HMAC256(generateRandomString(32));
 
     public static Account getAccountByUsernameAndPassword(String username, String password) {
         Account account = DatabaseHelper.getAccountByName(username);
@@ -27,23 +22,34 @@ public final class Authentication {
         return account;
     }
 
-    public static String generateOneTimeToken(Account account) {
+    public static Account getAccountByOneTimeToken(String token) {
+        String username = Authentication.tokens.get(token);
+        if (username == null) return null;
+        Authentication.tokens.remove(token);
+        return DatabaseHelper.getAccountByName(username);
+    }
+
+    public static String generateRandomString(int length){
         String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < 32; i++) {
+        for(int i = 0; i < length; i++) {
             sb.append(chars.charAt((int) (Math.random() * chars.length())));
         }
-        Authentication.tokens.put(sb.toString(), account.getUsername());
         return sb.toString();
     }
 
+    public static String generateOneTimeToken(Account account) {
+        String token = Authentication.generateRandomString(32);
+        Authentication.tokens.put(token, account.getUsername());
+        return token;
+    }
+
     public static String generateJwt(Account account) {
-        String jws = Jwts.builder()
-                .signWith(Authentication.getKey())
-                .claim("token",generateOneTimeToken(account))
-                .claim("username",account.getUsername())
-                .claim("uid",account.getPlayerUid())
-                .compact();
+        String jws = JWT.create()
+                .withClaim("token",generateOneTimeToken(account))
+                .withClaim("username",account.getUsername())
+                .withClaim("uid",account.getPlayerUid())
+                .sign(key);
         return jws;
     }
 
