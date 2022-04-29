@@ -21,7 +21,7 @@ Grasscutter Authentication System
   ```
 - Response is `JSON` with following keys:
   - `status` : `success` or `error`
-  - `message` : `success` or `error` message :
+  - `message` : 
     - AUTH_ENABLED : Plugin is enabled
     - AUTH_DISABLED : Plugin is disabled
     - EMPTY_BODY : No data was sent with the request
