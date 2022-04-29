@@ -7,6 +7,9 @@
 # Intellij
 .idea
 
+# Build file
+build
+
 # Output of the build
 out
 
