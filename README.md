@@ -7,9 +7,18 @@ Grasscutter Authentication System
 - All payload must be send with `application/json` and Compact JSON format ( without unnecessary spaces )
 - Auth endpoint is:
   - Check auth status : `/grasscutter/auth_status` (GET)
-  - Register: `/grasscutter/register` (POST) <br>payload : `{"username":"username","password":"password","password_confirmation":"password_confirmation"}`
-  - Login: `/grasscutter/login` (POST) <br>payload : `{"username":"username","password":"password"}`
-  - Change password: `/grasscutter/change_password` (POST) <br>payload : `{"username":"username","new_password":"new_password","new_password_confirmation":"new_password_confirmation","old_password":"old_password"}`
+  - Register: `/grasscutter/register` (POST)
+  ```
+  {"username":"username","password":"password","password_confirmation":"password_confirmation"}
+  ```
+  - Login: `/grasscutter/login` (POST) 
+  ```
+  {"username":"username","password":"password"}
+  ```
+  - Change password: `/grasscutter/change_password` (POST)  
+  ```
+  {"username":"username","new_password":"new_password","new_password_confirmation":"new_password_confirmation","old_password":"old_password"}
+  ```
 - Response is `JSON` with following keys:
   - `status` : `success` or `error`
   - `message` : `success` or `error` message :
