@@ -1,10 +1,11 @@
 package me.exzork.gcauth.handler;
 
 import com.google.gson.Gson;
-import com.sun.net.httpserver.HttpExchange;
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.game.Account;
-import emu.grasscutter.utils.Utils;
+import express.http.HttpContextHandler;
+import express.http.Request;
+import express.http.Response;
 import me.exzork.gcauth.GCAuth;
 import me.exzork.gcauth.json.AuthResponseJson;
 import me.exzork.gcauth.json.LoginGenerateToken;
@@ -12,14 +13,14 @@ import me.exzork.gcauth.utils.Authentication;
 
 import java.io.IOException;
 
-public class LoginHandler extends AbstractHandler{
+public class LoginHandler implements HttpContextHandler {
     @Override
-    public void handle(HttpExchange t) throws IOException {
+    public void handle(Request request, Response response) throws IOException {
         AuthResponseJson authResponse = new AuthResponseJson();
 
         if (GCAuth.getConfig().Enable) {
             try {
-                String requestBody = Utils.toString(t.getRequestBody());
+                String requestBody = request.ctx().body();
                 if (requestBody.isEmpty()) {
                     authResponse.success = false;
                     authResponse.message = "EMPTY_BODY"; // ENG = "No data was sent with the request"
@@ -55,7 +56,6 @@ public class LoginHandler extends AbstractHandler{
             authResponse.message = "AUTH_DISABLED"; // ENG = "Authentication is not required for this server..."
             authResponse.jwt = "";
         }
-
-        responseJSON(t, authResponse);
+        response.send(authResponse);
     }
 }
