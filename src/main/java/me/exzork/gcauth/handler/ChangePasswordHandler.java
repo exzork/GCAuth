@@ -33,12 +33,18 @@ public class ChangePasswordHandler implements HttpContextHandler {
                         authResponse.message = "INVALID_ACCOUNT"; // ENG = "Invalid username or password"
                         authResponse.jwt = "";
                     }
-                    String newPassword = Authentication.generateHash(changePasswordAccount.new_password);
-                    account.setPassword(newPassword);
-                    account.save();
-                    authResponse.success = true;
-                    authResponse.message = "";
-                    authResponse.jwt = "";
+                    if (changePasswordAccount.new_password.length() >= 8) {
+                        String newPassword = Authentication.generateHash(changePasswordAccount.new_password);
+                        account.setPassword(newPassword);
+                        account.save();
+                        authResponse.success = true;
+                        authResponse.message = "";
+                        authResponse.jwt = "";
+                    } else {
+                        authResponse.success = false;
+                        authResponse.message = "PASSWORD_INVALID"; // ENG = "Password must be at least 8 characters long"
+                        authResponse.jwt = "";
+                    }
                 } else {
                     authResponse.success = false;
                     authResponse.message = "PASSWORD_MISMATCH"; // ENG = "Passwords do not match."

@@ -28,15 +28,21 @@ public class RegisterHandler implements HttpContextHandler {
             } else {
                 RegisterAccount registerAccount = new Gson().fromJson(requestBody, RegisterAccount.class);
                 if (registerAccount.password.equals(registerAccount.password_confirmation)) {
-                    String password = Authentication.generateHash(registerAccount.password);
-                    Account account = DatabaseHelper.createAccountWithPassword(registerAccount.username, password);
-                    if (account == null) {
-                        authResponse.success = false;
-                        authResponse.message = "USERNAME_TAKEN"; // ENG = "Username has already been taken by another user."
-                        authResponse.jwt = "";
+                    if (registerAccount.password.length() >= 8) {
+                        String password = Authentication.generateHash(registerAccount.password);
+                        Account account = DatabaseHelper.createAccountWithPassword(registerAccount.username, password);
+                        if (account == null) {
+                            authResponse.success = false;
+                            authResponse.message = "USERNAME_TAKEN"; // ENG = "Username has already been taken by another user."
+                            authResponse.jwt = "";
+                        } else {
+                            authResponse.success = true;
+                            authResponse.message = "";
+                            authResponse.jwt = "";
+                        }
                     } else {
-                        authResponse.success = true;
-                        authResponse.message = "";
+                        authResponse.success = false;
+                        authResponse.message = "PASSWORD_INVALID"; // ENG = "Password must be at least 8 characters long"
                         authResponse.jwt = "";
                     }
                 } else {

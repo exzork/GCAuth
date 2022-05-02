@@ -50,13 +50,10 @@ public class GCAuthAuthenticationHandler implements AuthenticationHandler {
     public LoginResultJson handleGameLogin(Request request, LoginAccountRequestJson requestData) {
         LoginResultJson responseData = new LoginResultJson();
 
-        Grasscutter.getLogger()
-                .info(String.format("[Dispatch] Client %s is trying to log in", request.ip()));
-
         // Login
         Account account = Authentication.getAccountByOneTimeToken(requestData.account);
         if(account == null) {
-            Grasscutter.getLogger().info("[Dispatch] Client " + request.ip() + " failed to log in");
+            Grasscutter.getLogger().info("[GCAuth] Client " + request.ip() + " failed to log in");
             responseData.retcode = -201;
             responseData.message = "Token is invalid";
             return responseData;
@@ -68,7 +65,7 @@ public class GCAuthAuthenticationHandler implements AuthenticationHandler {
         responseData.data.account.token = account.generateSessionKey();
         responseData.data.account.email = account.getEmail();
 
-        Grasscutter.getLogger().info(String.format("[Dispatch] Client %s logged in as %s", request.ip(), responseData.data.account.uid));
+        Grasscutter.getLogger().info(String.format("[GCAuth] Client %s logged in as %s", request.ip(), responseData.data.account.uid));
 
         return responseData;
     }
