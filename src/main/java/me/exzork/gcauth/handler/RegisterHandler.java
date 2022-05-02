@@ -19,45 +19,40 @@ public class RegisterHandler implements HttpContextHandler {
     public void handle(Request request, Response response) throws IOException {
         AuthResponseJson authResponse = new AuthResponseJson();
 
-        if (GCAuth.getConfig().Enable) {
-            try {
-                String requestBody = request.ctx().body();
-                if (requestBody.isEmpty()) {
-                    authResponse.success = false;
-                    authResponse.message = "EMPTY_BODY"; // ENG = "No data was sent with the request"
-                    authResponse.jwt = "";
-                } else {
-                    RegisterAccount registerAccount = new Gson().fromJson(requestBody, RegisterAccount.class);
-                    if (registerAccount.password.equals(registerAccount.password_confirmation)) {
-                        String password = Authentication.generateHash(registerAccount.password);
-                        Account account = DatabaseHelper.createAccountWithPassword(registerAccount.username, password);
-                        if (account == null) {
-                            authResponse.success = false;
-                            authResponse.message = "USERNAME_TAKEN"; // ENG = "Username has already been taken by another user."
-                            authResponse.jwt = "";
-                        } else {
-                            authResponse.success = true;
-                            authResponse.message = "";
-                            authResponse.jwt = "";
-                        }
-                    } else {
+        try {
+            String requestBody = request.ctx().body();
+            if (requestBody.isEmpty()) {
+                authResponse.success = false;
+                authResponse.message = "EMPTY_BODY"; // ENG = "No data was sent with the request"
+                authResponse.jwt = "";
+            } else {
+                RegisterAccount registerAccount = new Gson().fromJson(requestBody, RegisterAccount.class);
+                if (registerAccount.password.equals(registerAccount.password_confirmation)) {
+                    String password = Authentication.generateHash(registerAccount.password);
+                    Account account = DatabaseHelper.createAccountWithPassword(registerAccount.username, password);
+                    if (account == null) {
                         authResponse.success = false;
-                        authResponse.message = "PASSWORD_MISMATCH"; // ENG = "Passwords do not match."
+                        authResponse.message = "USERNAME_TAKEN"; // ENG = "Username has already been taken by another user."
+                        authResponse.jwt = "";
+                    } else {
+                        authResponse.success = true;
+                        authResponse.message = "";
                         authResponse.jwt = "";
                     }
+                } else {
+                    authResponse.success = false;
+                    authResponse.message = "PASSWORD_MISMATCH"; // ENG = "Passwords do not match."
+                    authResponse.jwt = "";
                 }
-            } catch (Exception e) {
-                authResponse.success = false;
-                authResponse.message = "UNKNOWN"; // ENG = "An unknown error has occurred..."
-                authResponse.jwt = "";
-                Grasscutter.getLogger().error("[Dispatch] An error occurred while creating an account.");
-                e.printStackTrace();
             }
-        } else {
+        } catch (Exception e) {
             authResponse.success = false;
-            authResponse.message = "AUTH_DISABLED"; // ENG = "Authentication is not required for this server..."
+            authResponse.message = "UNKNOWN"; // ENG = "An unknown error has occurred..."
             authResponse.jwt = "";
+            Grasscutter.getLogger().error("[Dispatch] An error occurred while creating an account.");
+            e.printStackTrace();
         }
+
         response.send(authResponse);
     }
 }
