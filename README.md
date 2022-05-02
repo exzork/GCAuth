@@ -3,19 +3,18 @@ Grasscutter Authentication System
 ### Usage : 
 - Place jar inside plugins folder of Grasscutter.
 - To change hash algorithm change `Hash` in config.json inside plugins/GCAuth (Only Bcrypt and Scrypt is supported)
-- To enable/disable plugin change `Enable` config.json inside plugins/GCAuth (enabled by default)
 - All payload must be send with `application/json` and Compact JSON format ( without unnecessary spaces )
 - Auth endpoint is:
-  - Check auth status : `/grasscutter/auth_status` (GET)
-  - Register: `/grasscutter/register` (POST)
+  - Authentication Checking : `/authentication/type` (GET) , it'll return `me.exzork.gcauth.handler.GCAuthAuthenticationHandler` if GCAuth is loaded and enabled.
+  - Register: `/authentication/register` (POST)
   ```
   {"username":"username","password":"password","password_confirmation":"password_confirmation"}
   ```
-  - Login: `/grasscutter/login` (POST) 
+  - Login: `/authentication/login` (POST) 
   ```
   {"username":"username","password":"password"}
   ```
-  - Change password: `/grasscutter/change_password` (POST)  
+  - Change password: `/authentication/change_password` (POST)  
   ```
   {"username":"username","new_password":"new_password","new_password_confirmation":"new_password_confirmation","old_password":"old_password"}
   ```
