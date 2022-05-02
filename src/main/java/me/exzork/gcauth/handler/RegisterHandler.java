@@ -19,16 +19,16 @@ public class RegisterHandler implements HttpContextHandler {
     public void handle(Request request, Response response) throws IOException {
         AuthResponseJson authResponse = new AuthResponseJson();
 
-        if (GCAuth.getConfig().Enable) {
-            try {
-                String requestBody = request.ctx().body();
-                if (requestBody.isEmpty()) {
-                    authResponse.success = false;
-                    authResponse.message = "EMPTY_BODY"; // ENG = "No data was sent with the request"
-                    authResponse.jwt = "";
-                } else {
-                    RegisterAccount registerAccount = new Gson().fromJson(requestBody, RegisterAccount.class);
-                    if (registerAccount.password.equals(registerAccount.password_confirmation)) {
+        try {
+            String requestBody = request.ctx().body();
+            if (requestBody.isEmpty()) {
+                authResponse.success = false;
+                authResponse.message = "EMPTY_BODY"; // ENG = "No data was sent with the request"
+                authResponse.jwt = "";
+            } else {
+                RegisterAccount registerAccount = new Gson().fromJson(requestBody, RegisterAccount.class);
+                if (registerAccount.password.equals(registerAccount.password_confirmation)) {
+                    if (registerAccount.password.length() >= 8) {
                         String password = Authentication.generateHash(registerAccount.password);
                         Account account = DatabaseHelper.createAccountWithPassword(registerAccount.username, password);
                         if (account == null) {
@@ -42,22 +42,23 @@ public class RegisterHandler implements HttpContextHandler {
                         }
                     } else {
                         authResponse.success = false;
-                        authResponse.message = "PASSWORD_MISMATCH"; // ENG = "Passwords do not match."
+                        authResponse.message = "PASSWORD_INVALID"; // ENG = "Password must be at least 8 characters long"
                         authResponse.jwt = "";
                     }
+                } else {
+                    authResponse.success = false;
+                    authResponse.message = "PASSWORD_MISMATCH"; // ENG = "Passwords do not match."
+                    authResponse.jwt = "";
                 }
-            } catch (Exception e) {
-                authResponse.success = false;
-                authResponse.message = "UNKNOWN"; // ENG = "An unknown error has occurred..."
-                authResponse.jwt = "";
-                Grasscutter.getLogger().error("[Dispatch] An error occurred while creating an account.");
-                e.printStackTrace();
             }
-        } else {
+        } catch (Exception e) {
             authResponse.success = false;
-            authResponse.message = "AUTH_DISABLED"; // ENG = "Authentication is not required for this server..."
+            authResponse.message = "UNKNOWN"; // ENG = "An unknown error has occurred..."
             authResponse.jwt = "";
+            Grasscutter.getLogger().error("[Dispatch] An error occurred while creating an account.");
+            e.printStackTrace();
         }
+
         response.send(authResponse);
     }
 }
