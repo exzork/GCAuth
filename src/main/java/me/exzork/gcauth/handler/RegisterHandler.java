@@ -32,8 +32,7 @@ public class RegisterHandler implements HttpContextHandler {
                         String password = Authentication.generateHash(registerAccount.password);
                         Account account = Authentication.getAccountByUsernameAndPassword(registerAccount.username, "");
                         if (account != null) {
-                            String newPassword = Authentication.generateHash(password);
-                            account.setPassword(newPassword);
+                            account.setPassword(password);
                             account.save();
                             authResponse.success = true;
                             authResponse.message = "";
