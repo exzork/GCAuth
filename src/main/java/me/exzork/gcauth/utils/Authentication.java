@@ -16,6 +16,7 @@ public final class Authentication {
 
     public static Account getAccountByUsernameAndPassword(String username, String password) {
         Account account = DatabaseHelper.getAccountByName(username);
+        if (account == null) return null;
         if(account.getPassword() != null && !account.getPassword().isEmpty()) {
             if(!verifyPassword(password, account.getPassword())) account = null;
         }

@@ -29,24 +29,30 @@ public class RegisterHandler implements HttpContextHandler {
                 if (registerAccount.password.equals(registerAccount.password_confirmation)) {
                     if (registerAccount.password.length() >= 8) {
                         String password = Authentication.generateHash(registerAccount.password);
-                        Account account = Authentication.getAccountByUsernameAndPassword(registerAccount.username, "");
-                        if (account != null) {
-                            account.setPassword(password);
-                            account.save();
-                            authResponse.success = true;
-                            authResponse.message = "";
-                            authResponse.jwt = "";
-                        } else {
-                            account = DatabaseHelper.createAccountWithPassword(registerAccount.username, password);
-                            if (account == null) {
-                                authResponse.success = false;
-                                authResponse.message = "USERNAME_TAKEN"; // ENG = "Username has already been taken by another user."
-                                authResponse.jwt = "";
-                            } else {
+                        try{
+                            Account account = Authentication.getAccountByUsernameAndPassword(registerAccount.username, "");
+                            if (account != null) {
+                                account.setPassword(password);
+                                account.save();
                                 authResponse.success = true;
                                 authResponse.message = "";
                                 authResponse.jwt = "";
+                            } else {
+                                account = DatabaseHelper.createAccountWithPassword(registerAccount.username, password);
+                                if (account == null) {
+                                    authResponse.success = false;
+                                    authResponse.message = "USERNAME_TAKEN"; // ENG = "Username has already been taken by another user."
+                                    authResponse.jwt = "";
+                                } else {
+                                    authResponse.success = true;
+                                    authResponse.message = "";
+                                    authResponse.jwt = "";
+                                }
                             }
+                        }catch (Exception ignored){
+                            authResponse.success = false;
+                            authResponse.message = "UNKNOWN"; // ENG = "Username has already been taken by another user."
+                            authResponse.jwt = "";
                         }
                     } else {
                         authResponse.success = false;
