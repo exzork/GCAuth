@@ -3,23 +3,9 @@ package me.exzork.gcauth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import emu.grasscutter.Grasscutter;
-import emu.grasscutter.database.DatabaseHelper;
-import emu.grasscutter.game.Account;
 import emu.grasscutter.net.proto.QueryCurrRegionHttpRspOuterClass;
 import emu.grasscutter.plugin.Plugin;
-import emu.grasscutter.server.dispatch.DispatchHttpJsonHandler;
-import emu.grasscutter.server.dispatch.json.ComboTokenReqJson;
-import emu.grasscutter.server.dispatch.json.ComboTokenResJson;
-import emu.grasscutter.server.dispatch.json.LoginResultJson;
-import emu.grasscutter.server.dispatch.json.LoginTokenRequestJson;
-import emu.grasscutter.server.event.dispatch.QueryAllRegionsEvent;
-import emu.grasscutter.server.event.dispatch.QueryCurrentRegionEvent;
-import express.Express;
 import me.exzork.gcauth.handler.*;
-import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import java.io.File;
 import java.io.FileReader;
@@ -30,10 +16,12 @@ import java.nio.file.Files;
 
 public class GCAuth extends Plugin {
     private static Config config;
-    private static final File configFile = new File(Grasscutter.getConfig().PLUGINS_FOLDER+"GCAuth/config.json");
+    private File configFile;
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
     @Override
-    public void onLoad() {
+    public void onEnable() {
+        configFile = new File(getDataFolder().toPath()+ "/config.json");
         if (!configFile.exists()) {
             try {
                 Files.createDirectories(configFile.toPath().getParent());
@@ -42,10 +30,6 @@ public class GCAuth extends Plugin {
             }
         }
         loadConfig();
-    }
-
-    @Override
-    public void onEnable() {
         if(Grasscutter.getDispatchServer().registerAuthHandler(new GCAuthAuthenticationHandler())) {
             Grasscutter.getLogger().info("[GCAuth] GCAuth Enabled!");
 
@@ -64,7 +48,7 @@ public class GCAuth extends Plugin {
         }
     }
 
-    public static void loadConfig() {
+    public  void loadConfig() {
         try (FileReader file = new FileReader(configFile)) {
             config = gson.fromJson(file,Config.class);
             saveConfig();
@@ -74,22 +58,11 @@ public class GCAuth extends Plugin {
         }
     }
 
-    public static void saveConfig() {
+    public void saveConfig() {
         try (FileWriter file = new FileWriter(configFile)) {
             file.write(gson.toJson(config));
         } catch (Exception e) {
             Grasscutter.getLogger().error("[GCAuth] Unable to save config file.");
-        }
-    }
-
-
-    public static class RegionData {
-        QueryCurrRegionHttpRspOuterClass.QueryCurrRegionHttpRsp parsedRegionQuery;
-        String Base64;
-
-        public RegionData(QueryCurrRegionHttpRspOuterClass.QueryCurrRegionHttpRsp prq, String b64) {
-            this.parsedRegionQuery = prq;
-            this.Base64 = b64;
         }
     }
     public static Config getConfig() {return config;}

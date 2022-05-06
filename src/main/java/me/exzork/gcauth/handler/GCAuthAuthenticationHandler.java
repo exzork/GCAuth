@@ -2,14 +2,12 @@ package me.exzork.gcauth.handler;
 
 
 import emu.grasscutter.Grasscutter;
-import emu.grasscutter.database.DatabaseHelper;
 import emu.grasscutter.game.Account;
 import emu.grasscutter.server.dispatch.authentication.AuthenticationHandler;
 import emu.grasscutter.server.dispatch.json.LoginAccountRequestJson;
 import emu.grasscutter.server.dispatch.json.LoginResultJson;
 import express.http.Request;
 import express.http.Response;
-import me.exzork.gcauth.GCAuth;
 import me.exzork.gcauth.utils.Authentication;
 
 import java.io.IOException;
