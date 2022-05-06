@@ -6,7 +6,6 @@ import emu.grasscutter.game.Account;
 import express.http.HttpContextHandler;
 import express.http.Request;
 import express.http.Response;
-import me.exzork.gcauth.GCAuth;
 import me.exzork.gcauth.json.AuthResponseJson;
 import me.exzork.gcauth.json.LoginGenerateToken;
 import me.exzork.gcauth.utils.Authentication;
