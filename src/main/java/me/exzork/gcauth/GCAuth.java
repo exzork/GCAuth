@@ -3,9 +3,9 @@ package me.exzork.gcauth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import emu.grasscutter.Grasscutter;
-import emu.grasscutter.net.proto.QueryCurrRegionHttpRspOuterClass;
 import emu.grasscutter.plugin.Plugin;
 import me.exzork.gcauth.handler.*;
+import me.exzork.gcauth.utils.Authentication;
 
 import java.io.File;
 import java.io.FileReader;
@@ -32,8 +32,9 @@ public class GCAuth extends Plugin {
         loadConfig();
         if(Grasscutter.getDispatchServer().registerAuthHandler(new GCAuthAuthenticationHandler())) {
             Grasscutter.getLogger().info("[GCAuth] GCAuth Enabled!");
-
-            if(Grasscutter.getConfig().getDispatchOptions().AutomaticallyCreateAccounts) {
+            config.jwtSecret = Authentication.generateRandomString(32);
+            saveConfig();
+            if(Grasscutter.getConfig().account.autoCreate) {
                 Grasscutter.getLogger().warn("[GCAuth] GCAuth does not support automatic account creation. Please disable in the server's config.json or just ignore this warning.");
             }
         } else {
@@ -65,5 +66,6 @@ public class GCAuth extends Plugin {
             Grasscutter.getLogger().error("[GCAuth] Unable to save config file.");
         }
     }
-    public static Config getConfig() {return config;}
+    public static Config getConfigStatic() {return config;}
+    public Config getConfig() {return config;}
 }

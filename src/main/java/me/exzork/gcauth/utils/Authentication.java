@@ -13,6 +13,9 @@ import java.util.HashMap;
 public final class Authentication {
     public static final HashMap<String,String> tokens = new HashMap<String,String>();
     private static Algorithm key = Algorithm.HMAC256(generateRandomString(32));
+    public static Algorithm getKey() {
+        return key;
+    }
 
     public static Account getAccountByUsernameAndPassword(String username, String password) {
         Account account = DatabaseHelper.getAccountByName(username);
@@ -55,7 +58,7 @@ public final class Authentication {
     }
 
     public static String generateHash(String password) {
-        return switch (GCAuth.getConfig().Hash.toLowerCase()) {
+        return switch (GCAuth.getConfigStatic().Hash.toLowerCase()) {
             case "bcrypt" -> new BCryptPasswordEncoder().encode(password);
             case "scrypt" -> new SCryptPasswordEncoder().encode(password);
             default -> password;
@@ -63,7 +66,7 @@ public final class Authentication {
     }
 
     private static boolean verifyPassword(String password, String hash) {
-        return switch (GCAuth.getConfig().Hash.toLowerCase()) {
+        return switch (GCAuth.getConfigStatic().Hash.toLowerCase()) {
             case "bcrypt" -> new BCryptPasswordEncoder().matches(password, hash);
             case "scrypt" -> new SCryptPasswordEncoder().matches(password, hash);
             default -> password.equals(hash);
