@@ -45,6 +45,11 @@ public class GCAuthAuthenticationHandler implements AuthenticationHandler {
     }
 
     @Override
+    public boolean verifyUser(String details) {
+        return false;
+    }
+
+    @Override
     public LoginResultJson handleGameLogin(Request request, LoginAccountRequestJson requestData) {
         LoginResultJson responseData = new LoginResultJson();
 

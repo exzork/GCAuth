@@ -49,12 +49,11 @@ public final class Authentication {
     }
 
     public static String generateJwt(Account account) {
-        String jws = JWT.create()
+        return JWT.create()
                 .withClaim("token",generateOneTimeToken(account))
                 .withClaim("username",account.getUsername())
                 .withClaim("uid",account.getPlayerUid())
                 .sign(key);
-        return jws;
     }
 
     public static String generateHash(String password) {
