@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.logging.Logger;
 
 
 public class GCAuth extends Plugin {
@@ -21,37 +22,32 @@ public class GCAuth extends Plugin {
 
     @Override
     public void onEnable() {
-        configFile = new File(getDataFolder().toPath()+ "/config.json");
+        configFile = new File(getDataFolder().toPath() + "/config.json");
         if (!configFile.exists()) {
             try {
                 Files.createDirectories(configFile.toPath().getParent());
             } catch (IOException e) {
-                Grasscutter.getLogger().error("[GCAuth] Failed to create config.json");
+                getLogger().error("Failed to create config.json");
             }
         }
         loadConfig();
-        if(Grasscutter.getDispatchServer().registerAuthHandler(new GCAuthAuthenticationHandler())) {
-            Grasscutter.getLogger().info("[GCAuth] GCAuth Enabled!");
-            config.jwtSecret = Authentication.generateRandomString(32);
-            saveConfig();
-            if(Grasscutter.getConfig().account.autoCreate) {
-                Grasscutter.getLogger().warn("[GCAuth] GCAuth does not support automatic account creation. Please disable in the server's config.json or just ignore this warning.");
-            }
-        } else {
-            Grasscutter.getLogger().error("[GCAuth] GCAuth could not be enabled");
+        Grasscutter.setAuthenticationSystem(new GCAuthAuthentication());
+        getLogger().info("GCAuth Enabled!");
+        config.jwtSecret = Authentication.generateRandomString(32);
+        saveConfig();
+        if (Grasscutter.getConfig().account.autoCreate) {
+            getLogger().warn("GCAuth does not support automatic account creation. Please disable in the server's config.json or just ignore this warning.");
         }
     }
 
     @Override
     public void onDisable() {
-        if(Grasscutter.getDispatchServer().getAuthHandler().getClass().equals(GCAuthAuthenticationHandler.class)) {
-            Grasscutter.getDispatchServer().resetAuthHandler();
-        }
+
     }
 
-    public  void loadConfig() {
+    public void loadConfig() {
         try (FileReader file = new FileReader(configFile)) {
-            config = gson.fromJson(file,Config.class);
+            config = gson.fromJson(file, Config.class);
             saveConfig();
         } catch (Exception e) {
             config = new Config();
@@ -63,9 +59,15 @@ public class GCAuth extends Plugin {
         try (FileWriter file = new FileWriter(configFile)) {
             file.write(gson.toJson(config));
         } catch (Exception e) {
-            Grasscutter.getLogger().error("[GCAuth] Unable to save config file.");
+            getLogger().error("Unable to save config file.");
         }
     }
-    public static Config getConfigStatic() {return config;}
-    public Config getConfig() {return config;}
+
+    public static Config getConfigStatic() {
+        return config;
+    }
+
+    public Config getConfig() {
+        return config;
+    }
 }
