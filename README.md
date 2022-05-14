@@ -16,7 +16,7 @@ Grasscutter Authentication System
 - To use access control, you need set the `ACCESS_KEY` in config.json inside plugins/GCAuth. (Optional)
 - All payload must be send with `application/json` and Compact JSON format ( without unnecessary spaces )
 - Auth endpoint is:
-  - Authentication Checking : `/authentication/type` (GET) , it'll return `me.exzork.gcauth.handler.GCAuthAuthentication` if GCAuth is loaded and enabled.
+  - Authentication Checking : `/authentication/type` (GET) , it'll return `GCAuthAuthentication` if GCAuth is loaded and enabled.
   - Register: `/authentication/register` (POST)
   ```
   {"username":"username","password":"password","password_confirmation":"password_confirmation"}
