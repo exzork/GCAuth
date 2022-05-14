@@ -2,6 +2,13 @@
 
 Grasscutter Authentication System
 
+### Version Compatibility
+| GCAuth        | Grasscutter Development | Grasscutter Stable |
+|---------------|-------------------------|--------------------|
+| 2.1.4+        | 1.1.1-dev               | -                  |
+| 2.0.0 - 2.1.3 | 1.0.3-dev               | 1.1.0              |
+| 1.0.0         | 1.0.2-dev               | -                  |
+
 ### Usage : 
 - Place jar inside plugins folder of Grasscutter.
 - To change hash algorithm change `Hash` in config.json inside plugins/GCAuth (Only Bcrypt and Scrypt is supported)
@@ -11,16 +18,17 @@ Grasscutter Authentication System
   - Authentication Checking : `/authentication/type` (GET) , it'll return `me.exzork.gcauth.handler.GCAuthAuthenticationHandler` if GCAuth is loaded and enabled.
   - Register: `/authentication/register` (POST)
   ```
-  {"username":"username","password":"password","password_confirmation":"password_confirmation","access_key":"access_key"}
+  {"username":"username","password":"password","password_confirmation":"password_confirmation"}
   ```
   - Login: `/authentication/login` (POST) 
   ```
-  {"username":"username","password":"password","access_key":"access_key"}
+  {"username":"username","password":"password"}
   ```
   - Change password: `/authentication/change_password` (POST)  
   ```
-  {"username":"username","new_password":"new_password","new_password_confirmation":"new_password_confirmation","old_password":"old_password","access_key":"access_key"}
+  {"username":"username","new_password":"new_password","new_password_confirmation":"new_password_confirmation","old_password":"old_password"}
   ```
+- If you set ACCESS_KEY you must add `access_key: ACCESS_KEY` in your payload.
 - Response is `JSON` with following keys:
   - `status` : `success` or `error`
   - `message` : 
