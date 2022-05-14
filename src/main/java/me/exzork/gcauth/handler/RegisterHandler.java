@@ -7,6 +7,7 @@ import emu.grasscutter.game.Account;
 import express.http.HttpContextHandler;
 import express.http.Request;
 import express.http.Response;
+import me.exzork.gcauth.GCAuth;
 import me.exzork.gcauth.json.AuthResponseJson;
 import me.exzork.gcauth.json.RegisterAccount;
 import me.exzork.gcauth.utils.Authentication;
@@ -44,6 +45,12 @@ public class RegisterHandler implements HttpContextHandler {
                                     authResponse.message = "USERNAME_TAKEN"; // ENG = "Username has already been taken by another user."
                                     authResponse.jwt = "";
                                 } else {
+                                    if (GCAuth.getConfigStatic().defaultPermissions.length > 0) {
+                                        for (String permission : GCAuth.getConfigStatic().defaultPermissions) {
+                                            account.addPermission(permission);
+                                        }
+                                    }
+                                    account.save();
                                     authResponse.success = true;
                                     authResponse.message = "";
                                     authResponse.jwt = "";
