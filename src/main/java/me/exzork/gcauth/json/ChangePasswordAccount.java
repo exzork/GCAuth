@@ -5,4 +5,5 @@ public class ChangePasswordAccount {
     public String new_password;
     public String new_password_confirmation;
     public String old_password;
+    public String access_key;
 }

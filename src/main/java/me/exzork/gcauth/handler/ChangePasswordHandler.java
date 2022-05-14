@@ -6,6 +6,7 @@ import emu.grasscutter.game.Account;
 import express.http.HttpContextHandler;
 import express.http.Request;
 import express.http.Response;
+import me.exzork.gcauth.GCAuth;
 import me.exzork.gcauth.json.AuthResponseJson;
 import me.exzork.gcauth.json.ChangePasswordAccount;
 import me.exzork.gcauth.utils.Authentication;
@@ -25,30 +26,36 @@ public class ChangePasswordHandler implements HttpContextHandler {
                 authResponse.jwt = "";
             } else {
                 ChangePasswordAccount changePasswordAccount = new Gson().fromJson(requestBody, ChangePasswordAccount.class);
-                if (changePasswordAccount.new_password.equals(changePasswordAccount.new_password_confirmation)) {
-                    Account account = Authentication.getAccountByUsernameAndPassword(changePasswordAccount.username, changePasswordAccount.old_password);
-                    if (account == null) {
-                        authResponse.success = false;
-                        authResponse.message = "INVALID_ACCOUNT"; // ENG = "Invalid username or password"
-                        authResponse.jwt = "";
-                    } else {
-                        if (changePasswordAccount.new_password.length() >= 8) {
-                            String newPassword = Authentication.generateHash(changePasswordAccount.new_password);
-                            account.setPassword(newPassword);
-                            account.save();
-                            authResponse.success = true;
-                            authResponse.message = "";
+                if (!GCAuth.getConfigStatic().ACCESS_KEY.isEmpty() && !GCAuth.getConfigStatic().ACCESS_KEY.equals(changePasswordAccount.access_key)){
+                    authResponse.success = false;
+                    authResponse.message = "ERROR_ACCESS_KEY"; // ENG = "Error access key was sent with the request"
+                    authResponse.jwt = "";
+                } else {
+                    if (changePasswordAccount.new_password.equals(changePasswordAccount.new_password_confirmation)) {
+                        Account account = Authentication.getAccountByUsernameAndPassword(changePasswordAccount.username, changePasswordAccount.old_password);
+                        if (account == null) {
+                            authResponse.success = false;
+                            authResponse.message = "INVALID_ACCOUNT"; // ENG = "Invalid username or password"
                             authResponse.jwt = "";
                         } else {
-                            authResponse.success = false;
-                            authResponse.message = "PASSWORD_INVALID"; // ENG = "Password must be at least 8 characters long"
-                            authResponse.jwt = "";
+                            if (changePasswordAccount.new_password.length() >= 8) {
+                                String newPassword = Authentication.generateHash(changePasswordAccount.new_password);
+                                account.setPassword(newPassword);
+                                account.save();
+                                authResponse.success = true;
+                                authResponse.message = "";
+                                authResponse.jwt = "";
+                            } else {
+                                authResponse.success = false;
+                                authResponse.message = "PASSWORD_INVALID"; // ENG = "Password must be at least 8 characters long"
+                                authResponse.jwt = "";
+                            }
                         }
+                    } else {
+                        authResponse.success = false;
+                        authResponse.message = "PASSWORD_MISMATCH"; // ENG = "Passwords do not match."
+                        authResponse.jwt = "";
                     }
-                } else {
-                    authResponse.success = false;
-                    authResponse.message = "PASSWORD_MISMATCH"; // ENG = "Passwords do not match."
-                    authResponse.jwt = "";
                 }
             }
         } catch (Exception e) {
