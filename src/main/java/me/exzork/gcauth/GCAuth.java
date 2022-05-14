@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.plugin.Plugin;
 import me.exzork.gcauth.handler.*;
-import me.exzork.gcauth.router.GCAuthRouter;
 import me.exzork.gcauth.utils.Authentication;
 
 import java.io.File;
@@ -31,8 +30,7 @@ public class GCAuth extends Plugin {
             }
         }
         loadConfig();
-        Grasscutter.setAuthenticationSystem(new GCAuthAuthenticationHandler());
-        //Grasscutter.getHttpServer().addRouter(GCAuthRouter.class);
+        Grasscutter.setAuthenticationSystem(new GCAuthAuthentication());
         Grasscutter.getLogger().info("[GCAuth] GCAuth Enabled!");
         config.jwtSecret = Authentication.generateRandomString(32);
         saveConfig();
