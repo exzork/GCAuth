@@ -17,8 +17,6 @@ public class LoginHandler implements HttpContextHandler {
     @Override
     public void handle(Request request, Response response) throws IOException {
         AuthResponseJson authResponse = new AuthResponseJson();
-
-
         try {
             String requestBody = request.ctx().body();
             if (requestBody.isEmpty()) {
