@@ -27,7 +27,7 @@ public class GCAuth extends Plugin {
             try {
                 Files.createDirectories(configFile.toPath().getParent());
             } catch (IOException e) {
-                getLogger().error("[GCAuth] Failed to create config.json");
+                getLogger().error("Failed to create config.json");
             }
         }
         loadConfig();
@@ -36,7 +36,7 @@ public class GCAuth extends Plugin {
         config.jwtSecret = Authentication.generateRandomString(32);
         saveConfig();
         if (Grasscutter.getConfig().account.autoCreate) {
-            getLogger().warn("[GCAuth] GCAuth does not support automatic account creation. Please disable in the server's config.json or just ignore this warning.");
+            getLogger().warn("GCAuth does not support automatic account creation. Please disable in the server's config.json or just ignore this warning.");
         }
     }
 
@@ -59,7 +59,7 @@ public class GCAuth extends Plugin {
         try (FileWriter file = new FileWriter(configFile)) {
             file.write(gson.toJson(config));
         } catch (Exception e) {
-            getLogger().error("[GCAuth] Unable to save config file.");
+            getLogger().error("Unable to save config file.");
         }
     }
 
