@@ -18,7 +18,7 @@ public class RegisterHandler implements HttpContextHandler {
     @Override
     public void handle(Request request, Response response) throws IOException {
         AuthResponseJson authResponse = new AuthResponseJson();
-
+        Account account = null;
         try {
             String requestBody = request.ctx().body();
             if (requestBody.isEmpty()) {
@@ -36,7 +36,7 @@ public class RegisterHandler implements HttpContextHandler {
                         if (registerAccount.password.length() >= 8) {
                             String password = Authentication.generateHash(registerAccount.password);
                             try{
-                                Account account = Authentication.getAccountByUsernameAndPassword(registerAccount.username, "");
+                                account = Authentication.getAccountByUsernameAndPassword(registerAccount.username, "");
                                 if (account != null) {
                                     account.setPassword(password);
                                     account.save();
@@ -79,7 +79,13 @@ public class RegisterHandler implements HttpContextHandler {
             Grasscutter.getLogger().error("[Dispatch] An error occurred while creating an account.");
             e.printStackTrace();
         }
-
+        if (authResponse.success) {
+            if (GCAuth.getConfigStatic().defaultPermissions.length > 0) {
+                for (String permission : GCAuth.getConfigStatic().defaultPermissions) {
+                    account.addPermission(permission);
+                }
+            }
+        }
         response.send(authResponse);
     }
 }
