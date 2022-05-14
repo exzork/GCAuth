@@ -4,19 +4,24 @@ import com.google.gson.Gson;
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.database.DatabaseHelper;
 import emu.grasscutter.game.Account;
-import express.http.HttpContextHandler;
+import emu.grasscutter.server.http.Router;
+import express.Express;
 import express.http.Request;
 import express.http.Response;
+import io.javalin.Javalin;
 import me.exzork.gcauth.GCAuth;
 import me.exzork.gcauth.json.AuthResponseJson;
 import me.exzork.gcauth.json.RegisterAccount;
 import me.exzork.gcauth.utils.Authentication;
 
-import java.io.IOException;
 
-public class RegisterHandler implements HttpContextHandler {
-    @Override
-    public void handle(Request request, Response response) throws IOException {
+public class RegisterHandler implements Router {
+
+    @Override public void applyRoutes(Express express, Javalin handle) {
+        express.post("/authentication/register", RegisterHandler::handle);
+    }
+
+    public static void handle(Request request, Response response) {
         AuthResponseJson authResponse = new AuthResponseJson();
         Account account = null;
         try {

@@ -3,9 +3,12 @@ package me.exzork.gcauth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import emu.grasscutter.Grasscutter;
+import static emu.grasscutter.Configuration.ACCOUNT;
 import emu.grasscutter.plugin.Plugin;
-import me.exzork.gcauth.handler.*;
+import emu.grasscutter.auth.DefaultAuthentication;
+
 import me.exzork.gcauth.utils.Authentication;
+import me.exzork.gcauth.auth.GCAuthAuthenticationHandler;
 
 import java.io.File;
 import java.io.FileReader;
@@ -29,24 +32,23 @@ public class GCAuth extends Plugin {
                 Grasscutter.getLogger().error("[GCAuth] Failed to create config.json");
             }
         }
-        loadConfig();
-        if(Grasscutter.getDispatchServer().registerAuthHandler(new GCAuthAuthenticationHandler())) {
+        try {
+            Grasscutter.setAuthenticationSystem(new GCAuthAuthenticationHandler());
+            loadConfig();
             Grasscutter.getLogger().info("[GCAuth] GCAuth Enabled!");
             config.jwtSecret = Authentication.generateRandomString(32);
             saveConfig();
-            if(Grasscutter.getConfig().account.autoCreate) {
+            if(ACCOUNT.autoCreate) {
                 Grasscutter.getLogger().warn("[GCAuth] GCAuth does not support automatic account creation. Please disable in the server's config.json or just ignore this warning.");
             }
-        } else {
-            Grasscutter.getLogger().error("[GCAuth] GCAuth could not be enabled");
+        } catch (Exception e) {
+            Grasscutter.getLogger().error("[GCAuth] Failed to enable GCAuth!", e);
         }
     }
 
     @Override
     public void onDisable() {
-        if(Grasscutter.getDispatchServer().getAuthHandler().getClass().equals(GCAuthAuthenticationHandler.class)) {
-            Grasscutter.getDispatchServer().resetAuthHandler();
-        }
+        Grasscutter.setAuthenticationSystem(new DefaultAuthentication());
     }
 
     public  void loadConfig() {
