@@ -12,7 +12,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.logging.Logger;
 
 
 public class GCAuth extends Plugin {
@@ -31,7 +30,7 @@ public class GCAuth extends Plugin {
             }
         }
         loadConfig();
-        Grasscutter.setAuthenticationSystem(new GCAuthAuthentication());
+        Grasscutter.setAuthenticationSystem(new GCAuthAuthenticationHandler());
         getLogger().info("GCAuth Enabled!");
         config.jwtSecret = Authentication.generateRandomString(32);
         saveConfig();
