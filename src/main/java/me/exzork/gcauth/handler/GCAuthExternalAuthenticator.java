@@ -134,6 +134,7 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
                 for (String permission : GCAuth.getConfigStatic().defaultPermissions) {
                     account.addPermission(permission);
                 }
+                account.save();
             }
         }
         response.send(authResponse);
