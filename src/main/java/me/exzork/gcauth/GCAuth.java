@@ -3,7 +3,10 @@ package me.exzork.gcauth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import emu.grasscutter.Grasscutter;
+import emu.grasscutter.auth.DefaultAuthentication;
 import emu.grasscutter.plugin.Plugin;
+import static emu.grasscutter.Configuration.ACCOUNT;
+
 import me.exzork.gcauth.handler.*;
 import me.exzork.gcauth.utils.Authentication;
 
@@ -34,14 +37,14 @@ public class GCAuth extends Plugin {
         getLogger().info("GCAuth Enabled!");
         config.jwtSecret = Authentication.generateRandomString(32);
         saveConfig();
-        if (Grasscutter.getConfig().account.autoCreate) {
+        if (ACCOUNT.autoCreate) {
             getLogger().warn("GCAuth does not support automatic account creation. Please disable in the server's config.json or just ignore this warning.");
         }
     }
 
     @Override
     public void onDisable() {
-
+        Grasscutter.setAuthenticationSystem(new DefaultAuthentication());
     }
 
     public void loadConfig() {
