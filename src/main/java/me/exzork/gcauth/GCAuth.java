@@ -33,7 +33,7 @@ public class GCAuth extends Plugin {
             }
         }
         loadConfig();
-        Grasscutter.setAuthenticationSystem(new GCAuthAuthentication());
+        Grasscutter.setAuthenticationSystem(new GCAuthAuthenticationHandler());
         getLogger().info("GCAuth Enabled!");
         config.jwtSecret = Authentication.generateRandomString(32);
         saveConfig();
