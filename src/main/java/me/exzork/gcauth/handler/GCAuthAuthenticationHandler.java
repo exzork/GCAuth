@@ -6,6 +6,7 @@ import emu.grasscutter.auth.AuthenticationSystem;
 import emu.grasscutter.auth.ExternalAuthenticator;
 import emu.grasscutter.database.DatabaseHelper;
 import emu.grasscutter.game.Account;
+import express.http.Response;
 import me.exzork.gcauth.GCAuth;
 import me.exzork.gcauth.json.AuthResponseJson;
 import me.exzork.gcauth.json.ChangePasswordAccount;
@@ -17,8 +18,11 @@ public class GCAuthAuthenticationHandler implements ExternalAuthenticator {
     @Override
     public void handleLogin(AuthenticationSystem.AuthenticationRequest authenticationRequest) {
         AuthResponseJson authResponse = new AuthResponseJson();
+        Response response = authenticationRequest.getResponse();
+        assert response != null; // This should never be null.
+
         try {
-            String requestBody = authenticationRequest.getRequest().ctx().body();
+            String requestBody = response.ctx().body();
             if (requestBody.isEmpty()) {
                 authResponse.success = false;
                 authResponse.message = "EMPTY_BODY"; // ENG = "No data was sent with the request"
@@ -55,15 +59,18 @@ public class GCAuthAuthenticationHandler implements ExternalAuthenticator {
             Grasscutter.getLogger().error("[Dispatch] An error occurred while a user was logging in.");
             e.printStackTrace();
         }
-        authenticationRequest.getResponse().send(authResponse);
+        response.send(authResponse);
     }
 
     @Override
     public void handleAccountCreation(AuthenticationSystem.AuthenticationRequest authenticationRequest) {
         AuthResponseJson authResponse = new AuthResponseJson();
+        Response response = authenticationRequest.getResponse();
+        assert response != null; // This should never be null.
+
         Account account = null;
         try {
-            String requestBody = authenticationRequest.getRequest().ctx().body();
+            String requestBody = response.ctx().body();
             if (requestBody.isEmpty()) {
                 authResponse.success = false;
                 authResponse.message = "EMPTY_BODY"; // ENG = "No data was sent with the request"
@@ -129,14 +136,17 @@ public class GCAuthAuthenticationHandler implements ExternalAuthenticator {
                 }
             }
         }
-        authenticationRequest.getResponse().send(authResponse);
+        response.send(authResponse);
     }
 
     @Override
     public void handlePasswordReset(AuthenticationSystem.AuthenticationRequest authenticationRequest) {
         AuthResponseJson authResponse = new AuthResponseJson();
+        Response response = authenticationRequest.getResponse();
+        assert response != null; // This should never be null.
+
         try {
-            String requestBody = authenticationRequest.getRequest().ctx().body();
+            String requestBody = response.ctx().body();
             if (requestBody.isEmpty()) {
                 authResponse.success = false;
                 authResponse.message = "EMPTY_BODY"; // ENG = "No data was sent with the request"
@@ -183,6 +193,6 @@ public class GCAuthAuthenticationHandler implements ExternalAuthenticator {
             e.printStackTrace();
         }
 
-        authenticationRequest.getResponse().send(authResponse);
+        response.send(authResponse);
     }
 }
