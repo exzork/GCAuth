@@ -192,7 +192,6 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
             Grasscutter.getLogger().error("[Dispatch] Error while changing user password.");
             e.printStackTrace();
         }
-
         response.send(authResponse);
     }
 }
