@@ -5,7 +5,7 @@ Grasscutter Authentication System
 ### Version Compatibility
 | GCAuth        | Grasscutter Development | Grasscutter Stable |
 |---------------|-------------------------|--------------------|
-| 2.2.0         | 1.1.2-dev               | -                  |
+| 2.2.1         | 1.1.2-dev               | -                  |
 | 2.1.4 - 2.1.6 | 1.1.1-dev               | -                  |
 | 2.0.0 - 2.1.3 | 1.0.3-dev               | 1.1.0              |
 | 1.0.0         | 1.0.2-dev               | -                  |
