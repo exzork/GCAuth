@@ -11,7 +11,7 @@ import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import java.util.HashMap;
 
 public final class Authentication {
-    public static final HashMap<String,String> tokens = new HashMap<String,String>();
+    public static final HashMap<String,String> tokens = new HashMap<>();
     private static Algorithm key = Algorithm.HMAC256(generateRandomString(32));
     public static Algorithm getKey() {
         return key;
