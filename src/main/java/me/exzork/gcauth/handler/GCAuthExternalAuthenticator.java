@@ -29,7 +29,7 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
                 authResponse.jwt = "";
             } else {
                 LoginGenerateToken loginGenerateToken = new Gson().fromJson(requestBody, LoginGenerateToken.class);
-                if (!GCAuth.getConfigStatic().ACCESS_KEY.isEmpty() && !GCAuth.getConfigStatic().ACCESS_KEY.equals(loginGenerateToken.access_key)){
+                if (!GCAuth.getInstance().getConfig().accessKey.isEmpty() && !GCAuth.getInstance().getConfig().accessKey.equals(loginGenerateToken.access_key)){
                     authResponse.success = false;
                     authResponse.message = "ERROR_ACCESS_KEY"; // ENG = "Error access key was sent with the request"
                     authResponse.jwt = "";
@@ -77,7 +77,7 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
                 authResponse.jwt = "";
             } else {
                 RegisterAccount registerAccount = new Gson().fromJson(requestBody, RegisterAccount.class);
-                if (!GCAuth.getConfigStatic().ACCESS_KEY.isEmpty() && !GCAuth.getConfigStatic().ACCESS_KEY.equals(registerAccount.access_key)){
+                if (!GCAuth.getInstance().getConfig().accessKey.isEmpty() && !GCAuth.getInstance().getConfig().accessKey.equals(registerAccount.access_key)){
                     authResponse.success = false;
                     authResponse.message = "ERROR_ACCESS_KEY"; // ENG = "Error access key was sent with the request"
                     authResponse.jwt = "";
@@ -130,8 +130,8 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
             e.printStackTrace();
         }
         if (authResponse.success) {
-            if (GCAuth.getConfigStatic().defaultPermissions.length > 0) {
-                for (String permission : GCAuth.getConfigStatic().defaultPermissions) {
+            if (GCAuth.getInstance().getConfig().defaultPermissions.length > 0) {
+                for (String permission : GCAuth.getInstance().getConfig().defaultPermissions) {
                     account.addPermission(permission);
                 }
                 account.save();
@@ -154,7 +154,7 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
                 authResponse.jwt = "";
             } else {
                 ChangePasswordAccount changePasswordAccount = new Gson().fromJson(requestBody, ChangePasswordAccount.class);
-                if (!GCAuth.getConfigStatic().ACCESS_KEY.isEmpty() && !GCAuth.getConfigStatic().ACCESS_KEY.equals(changePasswordAccount.access_key)){
+                if (!GCAuth.getInstance().getConfig().accessKey.isEmpty() && !GCAuth.getInstance().getConfig().accessKey.equals(changePasswordAccount.access_key)){
                     authResponse.success = false;
                     authResponse.message = "ERROR_ACCESS_KEY"; // ENG = "Error access key was sent with the request"
                     authResponse.jwt = "";

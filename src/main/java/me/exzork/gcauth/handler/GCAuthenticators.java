@@ -18,11 +18,10 @@ public class GCAuthenticators {
             var requestData = authenticationRequest.getPasswordRequest();
             assert requestData != null; // This should never be null.
 
-            Account account = Authentication.getAccountByOneTimeToken(requestData.account);
+            Account account = Authentication.getAccountByOTP(requestData.account);
             if(account == null) {
-                Grasscutter.getLogger().info("[GCAuth] Client " + requestData.account + " tried to login with invalid one time token.");
                 response.retcode = -201;
-                response.message = "Token is invalid";
+                response.message = "OTP invalid";
                 return response;
             }
 

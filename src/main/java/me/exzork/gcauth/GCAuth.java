@@ -7,6 +7,7 @@ import emu.grasscutter.auth.DefaultAuthentication;
 import emu.grasscutter.plugin.Plugin;
 import static emu.grasscutter.Configuration.ACCOUNT;
 
+import emu.grasscutter.plugin.PluginManager;
 import me.exzork.gcauth.handler.*;
 import me.exzork.gcauth.utils.Authentication;
 
@@ -21,6 +22,9 @@ public class GCAuth extends Plugin {
     private static Config config;
     private File configFile;
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static GCAuth getInstance() {
+        return (GCAuth) Grasscutter.getPluginManager().getPlugin("GCAuth");
+    }
 
     @Override
     public void onEnable() {
@@ -63,10 +67,6 @@ public class GCAuth extends Plugin {
         } catch (Exception e) {
             getLogger().error("Unable to save config file.");
         }
-    }
-
-    public static Config getConfigStatic() {
-        return config;
     }
 
     public Config getConfig() {
