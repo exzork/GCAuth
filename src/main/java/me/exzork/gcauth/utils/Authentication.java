@@ -56,16 +56,17 @@ public final class Authentication {
     }
 
     public static String generateOTP(Account account) {
-        String token = Authentication.generateRandomNumber(6);
-        Authentication.otps.put(token, account.getUsername());
-        return token;
+        String otp = Authentication.generateRandomNumber(6);
+        while (otps.containsKey(otp)) {
+            GCAuth.getInstance().getLogger().info("OTP already in use, generating new one");
+            otp = Authentication.generateRandomNumber(6);
+        }
+        Authentication.otps.put(otp, account.getUsername());
+        return otp;
     }
 
     public static String generateJwt(Account account) {
         String otp = generateOTP(account);
-        while (otps.get(otp) != null) {
-            otp = generateOTP(account);
-        }
         watchOTP(otp);
         return JWT.create()
                 .withClaim("token", otp)
