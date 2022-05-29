@@ -5,6 +5,7 @@ import emu.grasscutter.auth.AuthenticationSystem;
 import emu.grasscutter.auth.Authenticator;
 import emu.grasscutter.game.Account;
 import emu.grasscutter.server.http.objects.LoginResultJson;
+import me.exzork.gcauth.GCAuth;
 import me.exzork.gcauth.utils.Authentication;
 
 public class GCAuthenticators {
@@ -31,7 +32,7 @@ public class GCAuthenticators {
             response.data.account.token = account.generateSessionKey();
             response.data.account.email = account.getEmail();
 
-            Grasscutter.getLogger().info("[GCAuth] Client " + requestData.account + " logged in");
+            GCAuth.getInstance().getLogger().info("[GCAuth] Client " + requestData.account + " logged in");
             return response;
         }
     }

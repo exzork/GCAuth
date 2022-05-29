@@ -71,7 +71,7 @@ public final class Authentication {
         return JWT.create()
                 .withClaim("token", otp)
                 .withClaim("username", account.getUsername())
-                .withClaim("uid", account.getPlayerUid())
+                .withClaim("uid", account.getReservedPlayerUid())
                 .withExpiresAt(Date.from(Instant.ofEpochSecond(System.currentTimeMillis() / 1000 + GCAuth.getInstance().getConfig().jwtExpiration)))
                 .sign(key);
     }

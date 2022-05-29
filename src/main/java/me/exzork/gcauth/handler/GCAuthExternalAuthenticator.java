@@ -56,7 +56,7 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
             authResponse.success = false;
             authResponse.message = "UNKNOWN"; // ENG = "An unknown error has occurred..."
             authResponse.jwt = "";
-            Grasscutter.getLogger().error("[Dispatch] An error occurred while a user was logging in.");
+            GCAuth.getInstance().getLogger().error("[Dispatch] An error occurred while a user was logging in.");
             e.printStackTrace();
         }
         response.send(authResponse);
@@ -126,7 +126,7 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
             authResponse.success = false;
             authResponse.message = "UNKNOWN"; // ENG = "An unknown error has occurred..."
             authResponse.jwt = "";
-            Grasscutter.getLogger().error("[Dispatch] An error occurred while creating an account.");
+            GCAuth.getInstance().getLogger().error("[Dispatch] An error occurred while creating an account.");
             e.printStackTrace();
         }
         if (authResponse.success) {
@@ -190,7 +190,7 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
             authResponse.success = false;
             authResponse.message = "UNKNOWN"; // ENG = "An unknown error has occurred..."
             authResponse.jwt = "";
-            Grasscutter.getLogger().error("[Dispatch] Error while changing user password.");
+            GCAuth.getInstance().getLogger().error("[Dispatch] Error while changing user password.");
             e.printStackTrace();
         }
         response.send(authResponse);
