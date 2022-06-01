@@ -47,3 +47,15 @@ Grasscutter Authentication System
     - `token` : Token used for authentication, paste it in username field of client.
     - `username` : Username of the user.
     - `uid` : UID of the user.
+
+## Config :
+- hash : Hash algorithm used for password hashing. (Only Bcrypt and Scrypt is supported)
+- jwtSecret : Secret used for JWT token.
+- jwtExpiration : Expiration time of JWT token.
+- otpExpiration : Expiration time of OTP.
+- defaultPermission : Default permission of user.
+- accessKey : Access key used for access control. (Optional)
+- rateLimit :
+  - maxRequests : Maximum requests per timeUnit.
+  - timeUnit : Time unit of rateLimit. (seconds, minutes, hours, days)
+  - endPoints[] : Endpoint to rate limit. (login, register, change_password)

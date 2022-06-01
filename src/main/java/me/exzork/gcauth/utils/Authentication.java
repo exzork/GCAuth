@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public final class Authentication {
     public static final HashMap<String, String> otps = new HashMap<>();
@@ -77,7 +78,7 @@ public final class Authentication {
     }
 
     public static String generateHash(String password) {
-        return switch (GCAuth.getInstance().getConfig().Hash.toLowerCase()) {
+        return switch (GCAuth.getInstance().getConfig().hash.toLowerCase()) {
             case "bcrypt" -> new BCryptPasswordEncoder().encode(password);
             case "scrypt" -> new SCryptPasswordEncoder().encode(password);
             default -> password;
@@ -85,7 +86,7 @@ public final class Authentication {
     }
 
     private static boolean verifyPassword(String password, String hash) {
-        return switch (GCAuth.getInstance().getConfig().Hash.toLowerCase()) {
+        return switch (GCAuth.getInstance().getConfig().hash.toLowerCase()) {
             case "bcrypt" -> new BCryptPasswordEncoder().matches(password, hash);
             case "scrypt" -> new SCryptPasswordEncoder().matches(password, hash);
             default -> password.equals(hash);
@@ -113,5 +114,15 @@ public final class Authentication {
                 timer.cancel();
             }
         },GCAuth.getInstance().getConfig().otpExpiration * 1000);
+    }
+
+    public static TimeUnit getTimeUnit(String timeUnit) {
+        return switch (timeUnit.toLowerCase()) {
+            case "seconds" -> TimeUnit.SECONDS;
+            case "minutes" -> TimeUnit.MINUTES;
+            case "hours" -> TimeUnit.HOURS;
+            case "days" -> TimeUnit.DAYS;
+            default -> TimeUnit.MINUTES;
+        };
     }
 }

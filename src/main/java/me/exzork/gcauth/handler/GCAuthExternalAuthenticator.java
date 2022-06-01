@@ -1,12 +1,15 @@
 package me.exzork.gcauth.handler;
 
 import com.google.gson.Gson;
+import com.mchange.v1.util.ArrayUtils;
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.auth.AuthenticationSystem;
 import emu.grasscutter.auth.ExternalAuthenticator;
 import emu.grasscutter.database.DatabaseHelper;
 import emu.grasscutter.game.Account;
 import express.http.Response;
+import io.javalin.http.Context;
+import io.javalin.http.util.RateLimit;
 import me.exzork.gcauth.GCAuth;
 import me.exzork.gcauth.json.AuthResponseJson;
 import me.exzork.gcauth.json.ChangePasswordAccount;
@@ -14,13 +17,20 @@ import me.exzork.gcauth.json.LoginGenerateToken;
 import me.exzork.gcauth.json.RegisterAccount;
 import me.exzork.gcauth.utils.Authentication;
 
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+
 public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
+    private String[] endPoints = GCAuth.getInstance().getConfig().rateLimit.endPoints;
+    private int maxRequests = GCAuth.getInstance().getConfig().rateLimit.maxRequests;
+    private String timeUnit = GCAuth.getInstance().getConfig().rateLimit.timeUnit;
     @Override
     public void handleLogin(AuthenticationSystem.AuthenticationRequest authenticationRequest) {
         AuthResponseJson authResponse = new AuthResponseJson();
         Response response = authenticationRequest.getResponse();
         assert response != null; // This should never be null.
-
+        if (Arrays.asList(endPoints).contains("login"))
+            new RateLimit(response.ctx()).requestPerTimeUnit(maxRequests, Authentication.getTimeUnit(timeUnit));
         try {
             String requestBody = response.ctx().body();
             if (requestBody.isEmpty()) {
@@ -67,7 +77,8 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
         AuthResponseJson authResponse = new AuthResponseJson();
         Response response = authenticationRequest.getResponse();
         assert response != null; // This should never be null.
-
+        if (Arrays.asList(endPoints).contains("register"))
+            new RateLimit(response.ctx()).requestPerTimeUnit(maxRequests, Authentication.getTimeUnit(timeUnit));
         Account account = null;
         try {
             String requestBody = response.ctx().body();
@@ -145,7 +156,8 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
         AuthResponseJson authResponse = new AuthResponseJson();
         Response response = authenticationRequest.getResponse();
         assert response != null; // This should never be null.
-
+        if (Arrays.asList(endPoints).contains("change_password"))
+            new RateLimit(response.ctx()).requestPerTimeUnit(maxRequests, Authentication.getTimeUnit(timeUnit));
         try {
             String requestBody = response.ctx().body();
             if (requestBody.isEmpty()) {
@@ -172,12 +184,11 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
                                 account.save();
                                 authResponse.success = true;
                                 authResponse.message = "";
-                                authResponse.jwt = "";
                             } else {
                                 authResponse.success = false;
                                 authResponse.message = "PASSWORD_INVALID"; // ENG = "Password must be at least 8 characters long"
-                                authResponse.jwt = "";
                             }
+                            authResponse.jwt = "";
                         }
                     } else {
                         authResponse.success = false;
