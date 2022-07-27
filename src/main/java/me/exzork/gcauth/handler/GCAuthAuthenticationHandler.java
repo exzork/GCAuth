@@ -8,7 +8,7 @@ import emu.grasscutter.server.http.objects.LoginResultJson;
 import me.exzork.gcauth.utils.Authentication;
 
 public class GCAuthAuthenticationHandler implements AuthenticationSystem {
-    private final Authenticator<LoginResultJson> gcAuthAuthenticator = new GCAuthenticators.GCAuthAuthenticator();
+    private final Authenticator<LoginResultJson> gcAuthAuthenticator = new GCAuthenticators.GCAuthAuthenticator();;
     private final Authenticator<LoginResultJson> tokenAuthenticator = new DefaultAuthenticators.TokenAuthenticator();
     private final Authenticator<ComboTokenResJson> sessionKeyAuthenticator = new DefaultAuthenticators.SessionKeyAuthenticator();
     private final GCAuthExternalAuthenticator externalAuthenticator = new GCAuthExternalAuthenticator();
