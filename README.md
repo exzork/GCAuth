@@ -5,7 +5,9 @@ Grasscutter Authentication System
 ### Version Compatibility
 | GCAuth        | Grasscutter Development                                                                                                        | Grasscutter Stable |
 |---------------|--------------------------------------------------------------------------------------------------------------------------------|--------------------|
-| 2.3.1+        | 1.1.2-dev ( [141b191](https://github.com/Grasscutters/Grasscutter/commit/ce07f56f9d10cc79c9b7104b66c2e4ff19cd4f53) and after ) | -                  |
+| 2.5.0+        | 1.2.3-dev                                                                                                                      | 1.1.0              |
+| 2.4.0         | 1.2.0-dev - 1.2.2-dev                                                                                                          | 1.2.0              |
+| 2.3.1         | 1.1.2-dev ( [141b191](https://github.com/Grasscutters/Grasscutter/commit/ce07f56f9d10cc79c9b7104b66c2e4ff19cd4f53) and after ) | -                  |
 | 2.2.1 - 2.3.0 | 1.1.2-dev ( before [141b191](https://github.com/Grasscutters/Grasscutter/commit/ce07f56f9d10cc79c9b7104b66c2e4ff19cd4f53) )    | -                  |
 | 2.1.4 - 2.1.6 | 1.1.1-dev                                                                                                                      | -                  |
 | 2.0.0 - 2.1.3 | 1.0.3-dev                                                                                                                      | 1.1.0              |
