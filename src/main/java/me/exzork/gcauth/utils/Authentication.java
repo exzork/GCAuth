@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public final class Authentication {
     public static final HashMap<String, String> otps = new HashMap<>();
-    private static Algorithm key = Algorithm.HMAC256(generateRandomNumber(32));
+    private static final Algorithm key = Algorithm.HMAC256(generateRandomNumber(32));
     public static Algorithm getKey() {
         return key;
     }
@@ -119,7 +119,6 @@ public final class Authentication {
     public static TimeUnit getTimeUnit(String timeUnit) {
         return switch (timeUnit.toLowerCase()) {
             case "seconds" -> TimeUnit.SECONDS;
-            case "minutes" -> TimeUnit.MINUTES;
             case "hours" -> TimeUnit.HOURS;
             case "days" -> TimeUnit.DAYS;
             default -> TimeUnit.MINUTES;

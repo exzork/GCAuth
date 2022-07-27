@@ -1,14 +1,11 @@
 package me.exzork.gcauth.handler;
 
 import com.google.gson.Gson;
-import com.mchange.v1.util.ArrayUtils;
-import emu.grasscutter.Grasscutter;
 import emu.grasscutter.auth.AuthenticationSystem;
 import emu.grasscutter.auth.ExternalAuthenticator;
 import emu.grasscutter.database.DatabaseHelper;
 import emu.grasscutter.game.Account;
 import express.http.Response;
-import io.javalin.http.Context;
 import io.javalin.http.util.RateLimit;
 import me.exzork.gcauth.GCAuth;
 import me.exzork.gcauth.json.AuthResponseJson;
@@ -18,12 +15,11 @@ import me.exzork.gcauth.json.RegisterAccount;
 import me.exzork.gcauth.utils.Authentication;
 
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
-    private String[] endPoints = GCAuth.getInstance().getConfig().rateLimit.endPoints;
-    private int maxRequests = GCAuth.getInstance().getConfig().rateLimit.maxRequests;
-    private String timeUnit = GCAuth.getInstance().getConfig().rateLimit.timeUnit;
+    private final String[] endPoints = GCAuth.getInstance().getConfig().rateLimit.endPoints;
+    private final int maxRequests = GCAuth.getInstance().getConfig().rateLimit.maxRequests;
+    private final String timeUnit = GCAuth.getInstance().getConfig().rateLimit.timeUnit;
     @Override
     public void handleLogin(AuthenticationSystem.AuthenticationRequest authenticationRequest) {
         AuthResponseJson authResponse = new AuthResponseJson();

@@ -10,15 +10,15 @@ sourceCompatibility = 17
 targetCompatibility = 17
 
 group 'me.exzork.gcauth'
-version '2.4.0'
+version '2.5.0'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation files('lib/grasscutter-1.1.2-dev.jar')
-    implementation 'org.springframework.security:spring-security-crypto:5.6.3'
+    implementation files('lib/grasscutter-1.2.3-dev.jar')
+    implementation 'org.springframework.security:spring-security-crypto:5.7.1'
     implementation 'commons-logging:commons-logging:1.2'
     implementation 'com.auth0:java-jwt:3.19.2'
     implementation 'javax.servlet:javax.servlet-api:4.0.1'

@@ -1,6 +1,5 @@
 package me.exzork.gcauth.handler;
 
-import emu.grasscutter.Grasscutter;
 import emu.grasscutter.auth.AuthenticationSystem;
 import emu.grasscutter.auth.Authenticator;
 import emu.grasscutter.game.Account;
@@ -11,7 +10,6 @@ import me.exzork.gcauth.utils.Authentication;
 public class GCAuthenticators {
 
     public static class GCAuthAuthenticator implements Authenticator<LoginResultJson> {
-
         @Override
         public LoginResultJson authenticate(AuthenticationSystem.AuthenticationRequest authenticationRequest) {
             var response = new LoginResultJson();

@@ -5,9 +5,7 @@ import com.google.gson.GsonBuilder;
 import emu.grasscutter.Grasscutter;
 import emu.grasscutter.auth.DefaultAuthentication;
 import emu.grasscutter.plugin.Plugin;
-import static emu.grasscutter.Configuration.ACCOUNT;
 
-import emu.grasscutter.plugin.PluginManager;
 import me.exzork.gcauth.handler.*;
 import me.exzork.gcauth.utils.Authentication;
 
@@ -16,6 +14,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+
+import static emu.grasscutter.config.Configuration.ACCOUNT;
 
 
 public class GCAuth extends Plugin {
