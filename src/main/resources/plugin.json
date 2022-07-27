@@ -1,7 +1,7 @@
 {
   "name": "GCAuth",
   "description": "GCAuth is a plugin that allows you to implement authentication for your server.",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "author": ["ExZork"],
   "mainClass": "me.exzork.gcauth.GCAuth"
 }
