@@ -16,7 +16,10 @@ public class GCAuthAuthenticationHandler implements AuthenticationSystem {
     @Override
     public void createAccount(String username, String password) {
         password = Authentication.generateHash(password);
-        DatabaseHelper.createAccountWithPassword(username, password);
+        Account account = DatabaseHelper.createAccount(username);
+        account.setPassword(password);
+        DatabaseHelper.saveAccount(account);
+        // DatabaseHelper.createAccountWithPassword(username, password);
     }
 
     @Override

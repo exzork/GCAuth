@@ -5,8 +5,8 @@ import emu.grasscutter.auth.AuthenticationSystem;
 import emu.grasscutter.auth.ExternalAuthenticator;
 import emu.grasscutter.database.DatabaseHelper;
 import emu.grasscutter.game.Account;
-import express.http.Response;
-import io.javalin.http.util.RateLimit;
+import io.javalin.http.Context;
+import io.javalin.http.util.NaiveRateLimit;
 import me.exzork.gcauth.GCAuth;
 import me.exzork.gcauth.json.AuthResponseJson;
 import me.exzork.gcauth.json.ChangePasswordAccount;
@@ -23,12 +23,12 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
     @Override
     public void handleLogin(AuthenticationSystem.AuthenticationRequest authenticationRequest) {
         AuthResponseJson authResponse = new AuthResponseJson();
-        Response response = authenticationRequest.getResponse();
-        assert response != null; // This should never be null.
+        Context ctx = authenticationRequest.getContext();
+        assert ctx != null; // This should never be null.
         if (Arrays.asList(endPoints).contains("login"))
-            new RateLimit(response.ctx()).requestPerTimeUnit(maxRequests, Authentication.getTimeUnit(timeUnit));
+            NaiveRateLimit.requestPerTimeUnit(ctx, maxRequests, Authentication.getTimeUnit(timeUnit));
         try {
-            String requestBody = response.ctx().body();
+            String requestBody = ctx.body();
             if (requestBody.isEmpty()) {
                 authResponse.success = false;
                 authResponse.message = "EMPTY_BODY"; // ENG = "No data was sent with the request"
@@ -65,19 +65,19 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
             GCAuth.getInstance().getLogger().error("[Dispatch] An error occurred while a user was logging in.");
             e.printStackTrace();
         }
-        response.send(authResponse);
+        ctx.json(authResponse);
     }
 
     @Override
     public void handleAccountCreation(AuthenticationSystem.AuthenticationRequest authenticationRequest) {
         AuthResponseJson authResponse = new AuthResponseJson();
-        Response response = authenticationRequest.getResponse();
-        assert response != null; // This should never be null.
+        Context ctx = authenticationRequest.getContext();
+        assert ctx != null; // This should never be null.
         if (Arrays.asList(endPoints).contains("register"))
-            new RateLimit(response.ctx()).requestPerTimeUnit(maxRequests, Authentication.getTimeUnit(timeUnit));
+            NaiveRateLimit.requestPerTimeUnit(ctx, maxRequests, Authentication.getTimeUnit(timeUnit));
         Account account = null;
         try {
-            String requestBody = response.ctx().body();
+            String requestBody = ctx.body();
             if (requestBody.isEmpty()) {
                 authResponse.success = false;
                 authResponse.message = "EMPTY_BODY"; // ENG = "No data was sent with the request"
@@ -101,12 +101,14 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
                                     authResponse.message = "";
                                     authResponse.jwt = "";
                                 } else {
-                                    account = DatabaseHelper.createAccountWithPassword(registerAccount.username, password);
+                                    account = DatabaseHelper.createAccount(registerAccount.username);
                                     if (account == null) {
                                         authResponse.success = false;
                                         authResponse.message = "USERNAME_TAKEN"; // ENG = "Username has already been taken by another user."
                                         authResponse.jwt = "";
                                     } else {
+                                        account.setPassword(password);
+                                        account.save();
                                         authResponse.success = true;
                                         authResponse.message = "";
                                         authResponse.jwt = "";
@@ -144,18 +146,18 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
                 account.save();
             }
         }
-        response.send(authResponse);
+        ctx.json(authResponse);
     }
 
     @Override
     public void handlePasswordReset(AuthenticationSystem.AuthenticationRequest authenticationRequest) {
         AuthResponseJson authResponse = new AuthResponseJson();
-        Response response = authenticationRequest.getResponse();
-        assert response != null; // This should never be null.
+        Context ctx = authenticationRequest.getContext();
+        assert ctx != null; // This should never be null.
         if (Arrays.asList(endPoints).contains("change_password"))
-            new RateLimit(response.ctx()).requestPerTimeUnit(maxRequests, Authentication.getTimeUnit(timeUnit));
+            NaiveRateLimit.requestPerTimeUnit(ctx, maxRequests, Authentication.getTimeUnit(timeUnit));
         try {
-            String requestBody = response.ctx().body();
+            String requestBody = ctx.body();
             if (requestBody.isEmpty()) {
                 authResponse.success = false;
                 authResponse.message = "EMPTY_BODY"; // ENG = "No data was sent with the request"
@@ -200,6 +202,6 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
             GCAuth.getInstance().getLogger().error("[Dispatch] Error while changing user password.");
             e.printStackTrace();
         }
-        response.send(authResponse);
+        ctx.json(authResponse);
     }
 }

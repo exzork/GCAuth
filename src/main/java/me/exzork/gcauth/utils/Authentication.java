@@ -21,6 +21,8 @@ public final class Authentication {
     public static Algorithm getKey() {
         return key;
     }
+    private static final BCryptPasswordEncoder BCryptEncoder = new BCryptPasswordEncoder();
+    private static final SCryptPasswordEncoder SCryptEncoder = new SCryptPasswordEncoder();
 
     public static Account getAccountByUsernameAndPassword(String username, String password) {
         Account account = DatabaseHelper.getAccountByName(username);
@@ -78,17 +80,21 @@ public final class Authentication {
     }
 
     public static String generateHash(String password) {
+        // TODO : encoder function error
+        //return password;
         return switch (GCAuth.getInstance().getConfig().hash.toLowerCase()) {
-            case "bcrypt" -> new BCryptPasswordEncoder().encode(password);
-            case "scrypt" -> new SCryptPasswordEncoder().encode(password);
+            case "bcrypt" -> BCryptEncoder.encode(password);
+            case "scrypt" -> SCryptEncoder.encode(password);
             default -> password;
         };
     }
 
     private static boolean verifyPassword(String password, String hash) {
+        // TODO : encoder function error
+        //return (password.equals(hash));
         return switch (GCAuth.getInstance().getConfig().hash.toLowerCase()) {
-            case "bcrypt" -> new BCryptPasswordEncoder().matches(password, hash);
-            case "scrypt" -> new SCryptPasswordEncoder().matches(password, hash);
+            case "bcrypt" -> BCryptEncoder.matches(password, hash);
+            case "scrypt" -> SCryptEncoder.matches(password, hash);
             default -> password.equals(hash);
         };
     }
