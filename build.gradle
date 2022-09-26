@@ -32,7 +32,7 @@ jar{
     jar.baseName = 'gcauth'
     from{
         configurations.runtimeClasspath.collect{
-            if (it.name in ['spring-security-crypto-5.6.3.jar','commons-logging-1.2.jar','javax.servlet-api-4.0.1.jar','java-jwt-3.19.2.jar','jackson-annotations-2.13.2.jar','jackson-core-2.13.2.jar','jackson-databind-2.13.2.2.jar']) {
+            if (it.name in ['spring-security-crypto-5.7.3.jar','commons-logging-1.2.jar','javax.servlet-api-4.0.1.jar','java-jwt-4.0.0.jar','jackson-annotations-2.13.2.jar','jackson-core-2.13.2.jar','jackson-databind-2.13.2.2.jar']) {
                 zipTree(it)
             }
         }
