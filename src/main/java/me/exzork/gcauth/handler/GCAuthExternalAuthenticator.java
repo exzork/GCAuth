@@ -101,12 +101,14 @@ public class GCAuthExternalAuthenticator implements ExternalAuthenticator {
                                     authResponse.message = "";
                                     authResponse.jwt = "";
                                 } else {
-                                    account = DatabaseHelper.createAccountWithPassword(registerAccount.username, password);
+                                    account = DatabaseHelper.createAccount(registerAccount.username);
                                     if (account == null) {
                                         authResponse.success = false;
                                         authResponse.message = "USERNAME_TAKEN"; // ENG = "Username has already been taken by another user."
                                         authResponse.jwt = "";
                                     } else {
+                                        account.setPassword(password);
+                                        account.save();
                                         authResponse.success = true;
                                         authResponse.message = "";
                                         authResponse.jwt = "";
