@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation files('lib/grasscutter-1.2.3-dev.jar')
+    implementation files('lib/grasscutter-1.6.3-dev.jar')
     implementation 'org.springframework.security:spring-security-crypto:5.7.1'
     implementation 'commons-logging:commons-logging:1.2'
     implementation 'com.auth0:java-jwt:3.19.2'
